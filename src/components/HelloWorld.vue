@@ -1,40 +1,87 @@
+<!-- 每一个vue有三个部分，分别是template、script和style
+ 其中template只能有一个根标签 -->
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+  <div>
+    <!-- 插值语法，支持表达式 -->
+    {{ name }} <!-- 获取属性的值-->
+    {{ age > 20 ? '已经是大人' : '还是小孩' }} <!-- 支持运算 -->
+    <div><input type="text" v-bind:value="name"></div> <!--v-bind是给标签的属性绑定值-->
+    <div><input type="text" :value="age"></div> <!-- 可以省略v-bind:, 简写为:xxx-->
+    <div><img :src="src"></div>
+
+    <!-- 给组件绑定事件，使用v-on:具体事件 或者 @事件 -->
+    <input type="button" value="保存" v-on:click="handleSave" />
+    <input type="button" value="保存" @click="handleSave" />
+    <!-- 双向绑定，data数据和表单数据同步，一方改变会影响另一方 -->
+    <input type="text" v-model="name" />
+    <input type="button" value="修改name的值" @click="handleModify" />
+    <!-- v-if 的演示 -->
+    <div>
+      <div v-if="sex == 1">男</div>
+      <div v-else-if="sex == 0">女</div>
+      <div v-else>未知</div>
+    </div>
+    <!-- axios使用演示 -->
+    <!-- 请求sky-takeout后端用户登录模块 -->
+    <!-- 需要配置跨域，否则报错。域的区分: 端口号、IP、协议 -->
+    <input type="button" value="登录" @click="handleLogin" />
+    <input type="button" value="测试" @click="handleLogin2" />
   </div>
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'HelloWorld',
   props: {
     msg: String
+  },
+  data() {
+    return {
+      name: 'xs',
+      age: 25,
+      src: '/images/xs.jpg',
+      sex: 0
+    }
+  },
+  methods: {
+    handleSave() {
+      alert("点击了保存按钮");
+    },
+    handleModify() {
+      this.name = "cr";
+    },
+    handleLogin() {
+      axios.post('/api/admin/employee/login',
+        {
+          username: 'admin',
+          password: '123456'
+        }
+      ).then(res2 => {
+        /**
+         * 查看console的输出可知，res2为后端的响应数据，名称不唯一，是由programmer指定的
+         * 包括config、data、headers、request、status、statusText等
+         */
+        console.log(res2);
+        console.log(res2.data);  // 所以这里的data是后端服务器返回的业务数据
+        console.log(res2.data.data);  // 第二个data是返回的业务数据中的data
+      }).catch(e => {
+        console.log(e);
+      })
+    },
+    handleLogin2() {
+      axios.post('/api/admin/employee/login',
+        {
+          username: 'admin',
+          password: '123456'
+        }
+      ).then(({data}) => {
+        console.log(data);  // 拿到的是response.data，即后端返回的业务数据
+      }).catch(e => {
+        console.log(e);
+      })
+    }
   }
 }
 </script>
@@ -44,14 +91,17 @@ export default {
 h3 {
   margin: 40px 0 0;
 }
+
 ul {
   list-style-type: none;
   padding: 0;
 }
+
 li {
   display: inline-block;
   margin: 0 10px;
 }
+
 a {
   color: #42b983;
 }
