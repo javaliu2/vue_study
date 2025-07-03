@@ -27,6 +27,16 @@
     <input type="button" value="登录" @click="handleLogin" />
     <input type="button" value="测试" @click="handleLogin2" />
     <input type="button" value="统一请求方式" @click="handleLoginUnify" />
+
+    <!-- router使用演示 -->
+     <nav>
+      <!-- 1）使用超链接 -->
+      <router-link to="/hello">hello</router-link> | 
+      <router-link to="/hi">hi</router-link> | 
+      <!-- 2）使用JS事件 -->
+       <input type="button" value="访问不存在的页面" @click="handleRedirect"/>
+     </nav>
+     <router-view/>
   </div>
 </template>
 
@@ -108,6 +118,9 @@ export default {
       }).catch(e => {
         console.log(e);
       })
+    },
+    handleRedirect() {
+      this.$router.push('/xs')  // 访问不存在的页面
     }
   }
 }
