@@ -26,6 +26,7 @@
     <!-- 需要配置跨域，否则报错。域的区分: 端口号、IP、协议 -->
     <input type="button" value="登录" @click="handleLogin" />
     <input type="button" value="测试" @click="handleLogin2" />
+    <input type="button" value="统一请求方式" @click="handleLoginUnify" />
   </div>
 </template>
 
@@ -78,6 +79,32 @@ export default {
         }
       ).then(({data}) => {
         console.log(data);  // 拿到的是response.data，即后端返回的业务数据
+      }).catch(e => {
+        console.log(e);
+      })
+    },
+    handleLoginUnify() {
+      axios({
+        url: '/api/admin/employee/login',
+        method: 'post',
+        data: {
+          username: 'admin',
+          password: '123456'
+        }
+      }
+      ).then(({data}) => {
+        console.log(data);
+        console.log(data.data);
+        console.log(data.data.token);
+        axios({
+          url: '/api/admin/shop/status',
+          method: 'get',
+          headers: {
+            token: data.data.token
+          }
+        }).then(({data}) => {
+          console.log(data);
+        })
       }).catch(e => {
         console.log(e);
       })
