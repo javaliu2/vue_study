@@ -22,6 +22,29 @@ const routes = [
     {
         path: '*',  // 捕获未匹配的请求，将其转发到404页面
         redirect: '/404'
+    },
+    {
+        path: '/c',
+        component: () => import('../views/container/ContainerView.vue'),
+        redirect: '/c/p1',  // 访问 /c 的话转发到 /c/p1 
+        children: [
+            {
+                path: '/c/p1',
+                component: () => import('../views/container/P1View.vue'),
+                children: [{
+                    path: '/c/p1/p11',
+                    component: () => import('../views/container/P11View.vue'),
+                }]
+            },
+            {
+                path: '/c/p2',
+                component: () => import('../views/container/P2View.vue')
+            },
+            {
+                path: '/c/p3',
+                component: () => import('../views/container/P3View.vue')
+            }
+        ]
     }
 ]
 
