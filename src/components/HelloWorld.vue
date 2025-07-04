@@ -37,7 +37,12 @@
        <input type="button" value="访问不存在的页面" @click="handleRedirect"/>
      </nav>
      <router-view/>
-  </div>
+
+    <!-- vuex使用 -->
+      In HelloWorld.vue, 当前用户: <span>{{ $store.state.name }}</span> |
+      <input tyep="button" value="修改name" @click="modifyName"> | 
+      <input tyep="button" value="修改nameAsyn" @click="modifyNameAsyn">
+    </div>
 </template>
 
 <script>
@@ -121,6 +126,12 @@ export default {
     },
     handleRedirect() {
       this.$router.push('/xs')  // 访问不存在的页面
+    },
+    modifyName() {
+      this.$store.commit('modifyName', 'cr');  // 调用mutation中的方法，1st是方法名，2nd是方法参数
+    },
+    modifyNameAsyn() {
+      this.$store.dispatch('modifyNameAsyn');  // 调用mutation中的方法，1st是方法参数
     }
   }
 }
